@@ -13,15 +13,42 @@ public class PlayerInputHandler : MonoBehaviour {
     public int lookYAxis = 5;
     public int primarySpellAxis = 3;//Trigger buttons are axis
 
-    private int prevDuelAxisValue = 0;
+    private int[] prevAxisButtonValue;
+    private int[] currentAxisButtonValue;
+    private const int MAX_AXIS = 5;
 
-    public int secondarySpell1Button = 4;
-    public int secondarySpell2Button = 5;
+    public int secondarySpellButton = 4;
+    public int disarmButton = 5;
     public int fireButton = 0;
     public int startButton = 7;
     public int selectButton = 0;
     public int backButton = 1;
 
+    void Start() {
+        prevAxisButtonValue    = new int[5];
+        currentAxisButtonValue = new int[5];
+    }
+
+    void Update() {
+        for(int i = 0; i < MAX_AXIS; ++i) {
+            prevAxisButtonValue[i] = currentAxisButtonValue[i];
+
+            float axisValue = Input.GetAxis("Joystick " + controllerNumber + " Axis " + (i + 1));
+
+            if (axisValue > axisToButtonThreshold) {
+                currentAxisButtonValue[i] = 1;
+
+            }
+            else if (axisValue < -axisToButtonThreshold) {
+                currentAxisButtonValue[i] = -1;
+
+            }
+            else {
+                currentAxisButtonValue[i] = 0;
+            }
+
+        }
+    }
     //Replacement Functions, use instead of normal input functions
 
     public bool GetButton(string button) {
@@ -29,14 +56,7 @@ public class PlayerInputHandler : MonoBehaviour {
     }
 
     public bool GetButtonDown(string button) {
-        //return Input.GetButtonDown("Joystick " + controllerNumber + " Button " + StringToButtonNumber(button));
-        if(Input.GetButtonDown("Joystick " + controllerNumber + " Button " + StringToButtonNumber(button))) {
-            Debug.Log("Joystick " + controllerNumber + " Button " + StringToButtonNumber(button));
-            return true;
-
-        } else {
-            return false;
-        }
+        return Input.GetButtonDown("Joystick " + controllerNumber + " Button " + StringToButtonNumber(button));
     }
 
     public bool GetButtonUp(string button) {
@@ -53,44 +73,27 @@ public class PlayerInputHandler : MonoBehaviour {
 
     //Conversion functions
 
-    public bool GetAxisAsButton(string axis) {
-        return GetAxis(axis) > axisToButtonThreshold;
+    public int GetAxisAsButton(string axis) {//For when two triggers are maped to 1 button. 1, 0, -1 will be outputed
+        return currentAxisButtonValue[StringToAxisNumber(axis) - 1];
     }
 
-    public int GetDuelAxisAsButton(string axis) {//For when two triggers are maped to 1 button. 1, 0, -1 will be outputed
-        float axisValue = GetAxis(axis);
+    public int GetAxisAsButtonDown(string axis) {
+        int axisNumber = StringToAxisNumber(axis);
 
-        if (axisValue > axisToButtonThreshold) {
-            prevDuelAxisValue = 1;
 
-        } else if(axisValue < -axisToButtonThreshold) {
-            prevDuelAxisValue = -1;
-
-        } else {
-            prevDuelAxisValue = 0;
-        }
-
-        return prevDuelAxisValue;
-    }
-
-    public int GetDuelAxisAsButtonDown(string axis) {
-        int prevPosition = prevDuelAxisValue;//because getting the current value resets this
-        int currentPosition = GetDuelAxisAsButton(axis);
-
-        if (prevPosition == 0) {
-            return currentPosition;
+        if (prevAxisButtonValue[axisNumber - 1] == 0) {
+            return currentAxisButtonValue[axisNumber - 1];
 
         } else {
             return 0;
         }
     }
 
-    public int GetDuelAxisAsButtonUp(string axis) {
-        int prevPosition = prevDuelAxisValue;//because getting the current value resets this
-        int currentPosition = GetDuelAxisAsButton(axis);
+    public int GetAxisAsButtonUp(string axis) {
+        int axisNumber = StringToAxisNumber(axis);
 
-        if (currentPosition != prevPosition) {
-            return prevPosition;
+        if (currentAxisButtonValue[axisNumber - 1] == 0) {
+            return prevAxisButtonValue[axisNumber - 1];
 
         }
         else {
@@ -175,12 +178,12 @@ public class PlayerInputHandler : MonoBehaviour {
 
     private int StringToButtonNumber(string s) {
 
-        if (s == "Secondary Spell 1") {
-            return secondarySpell1Button;
+        if (s == "Secondary Spell") {
+            return secondarySpellButton;
 
         }
-        else if (s == "Secondary Spell 2") {
-            return secondarySpell2Button;
+        else if (s == "Disarm") {
+            return disarmButton;
 
         }
         else if (s == "Fire") {

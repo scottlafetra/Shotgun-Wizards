@@ -62,7 +62,7 @@ public class StatsHandler : MonoBehaviour {
 
     public void ChangeMana(float dMana) {
 
-        health += dMana;
+        mana += dMana;
 
         //Bounding Check
         mana = Mathf.Max(mana, 0);

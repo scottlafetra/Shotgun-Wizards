@@ -6,6 +6,9 @@ public class PlayerController : MonoBehaviour {
     public PlayerInputHandler playerIn;
     public ShotgunController shotgun;
 
+    public SpellController primarySpell;
+    public SpellController secondarySpell;
+
     private CharacterController characterController;
 
     private StatsHandler myStats;
@@ -26,17 +29,34 @@ public class PlayerController : MonoBehaviour {
     void Update() {
 
         //Test input
-        if (playerIn.GetDuelAxisAsButtonDown("Primary Spell") != 0) {
-            Debug.Log("Prime Spell");
+        if (playerIn.GetAxisAsButtonDown("Primary Spell") < 0) {
             shotgun.fire();
         }
 
-        if (playerIn.GetButtonDown("Secondary Spell 1")) {
-            Debug.Log("Spell1");
+        if (playerIn.GetAxisAsButtonDown("Primary Spell") > 0) {
+            primarySpell.PressSpell(gameObject);
+        }
+        if (playerIn.GetAxisAsButtonUp("Primary Spell") > 0) {
+            primarySpell.ReleaseSpell(gameObject);
         }
 
-        if (playerIn.GetButtonDown("Secondary Spell 2")) {
-            Debug.Log("Spell2");
+        if (playerIn.GetButtonDown("Secondary Spell")) {
+            secondarySpell.PressSpell(gameObject);
+        }
+        if(playerIn.GetButtonUp("Secondary Spell")) {
+            secondarySpell.ReleaseSpell(gameObject);
+        }
+
+        if (playerIn.GetButtonDown("Disarm")) {
+
+            if(playerIn.GetAxisAsButton("Primary Spell") > 0) {
+
+                primarySpell.DisarmSpell();
+
+            } else if(playerIn.GetButton("Secondary Spell")) {
+
+                secondarySpell.DisarmSpell();
+            }
         }
 
         if (playerIn.GetButtonDown("Fire")) {

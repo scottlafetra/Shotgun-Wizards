@@ -7,6 +7,9 @@ public class SpellController : MonoBehaviour {
     public GameObject precastEffect;
     public GameObject spellEffect;
 
+    public Vector3 spellOffset;
+    public bool movesWithCaster = false;
+
     public float cooldownTime;
     private float nextCast;
 
@@ -14,22 +17,39 @@ public class SpellController : MonoBehaviour {
 
     public float manaCost;
 
-    private Dictionary<GameObject, GameObject> castSpells;//spell effects in play that can be looked up by caster
+    //Determines where the mana cost is applied
+    public bool isPreCostly = false;
+    public bool isPostCostly = true;
+
+    private GameObject castSpell;//spell effects in play that can be looked up by caster
+    private bool isDisarmed = false;
 
     void Start() {
         nextCast = 0;
     }
 
     private void InstatiateSpell(GameObject caster, GameObject spell) {
-        /*
-        if( castSpells.ContainsKey())
+        GameObject castSpell;
+        
 
-        castSpell = (GameObject) Instantiate(spell, caster.transform.position, caster.transform.rotation);
-        castSpell.GetComponent<ProjectileController>().setShooter(caster);
-        */
+        if(spell != null) {
+            castSpell = (GameObject)Instantiate(spell, caster.transform.position, caster.transform.rotation);
+            //set as parent if nessisary
+            if (movesWithCaster) {
+                castSpell.transform.parent = caster.transform;
+            }
+
+            //offset the spell relitive to caster rotation
+            castSpell.transform.position += caster.transform.right   * spellOffset.x;
+            castSpell.transform.position += caster.transform.up      * spellOffset.y;
+            castSpell.transform.position += caster.transform.forward * spellOffset.z;
+        }
+
+        castSpell = spell;
+         
     }
 
-    public void PressSpell(GameObject caster) {
+    private void CastWithCost(GameObject caster, GameObject spell) {
         StatsHandler casterStats = caster.GetComponent<StatsHandler>();
 
         //check for cooldown
@@ -41,7 +61,7 @@ public class SpellController : MonoBehaviour {
 
                 //remove mana then cast
                 casterStats.ChangeMana(-manaCost);
-                InstatiateSpell(caster, precastEffect);
+                InstatiateSpell(caster, spell);
 
             }
             else if (isBoodmagic && casterStats.GetHealth() + casterStats.GetMana() >= manaCost) {
@@ -49,16 +69,49 @@ public class SpellController : MonoBehaviour {
                 //remove mana and health then cast
                 casterStats.ChangeHealth(-(manaCost - casterStats.GetMana()));//minus the extra needed
                 casterStats.ChangeMana(-casterStats.GetMana());
-                InstatiateSpell(caster, precastEffect);
+                InstatiateSpell(caster, spell);
             }
         }
     }
 
-    public void ReleaseSpell(GameObject caster) {
-        //if()
+    public void PressSpell(GameObject caster) {
+
+        if (isPreCostly) {
+            CastWithCost(caster, precastEffect);
+
+        } else {
+            InstatiateSpell(caster, precastEffect);
+        }
     }
 
-    public void DisarmSpell(GameObject caster) {
+    public void ReleaseSpell(GameObject caster) {
+        
+        if(castSpell != null) {
+            Destroy(castSpell);
+            castSpell = null;
+        }
 
+        if (isDisarmed) {
+            isDisarmed = false;
+
+        } else {
+            //cast release effects
+            if (isPostCostly) {
+                CastWithCost(caster, spellEffect);
+
+            } else {
+                InstatiateSpell(caster, spellEffect);
+            }
+        }
+    }
+
+    public void DisarmSpell() {
+        
+        if (castSpell != null) {
+            Destroy(castSpell);
+            castSpell = null;
+        }
+
+        isDisarmed = true;
     }
 }
