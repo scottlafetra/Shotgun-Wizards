@@ -116,11 +116,13 @@
     <Compile Include="Assets\Scripts\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\PlayerInputHandler.cs" />
+    <Compile Include="Assets\Scripts\Projectiles\DamageOverTime.cs" />
     <Compile Include="Assets\Scripts\Projectiles\Destroyers\DestroyOnContact.cs" />
     <Compile Include="Assets\Scripts\Projectiles\Destroyers\DestroyOnDistance.cs" />
     <Compile Include="Assets\Scripts\Projectiles\Destroyers\DestroyOnStart.cs" />
     <Compile Include="Assets\Scripts\Projectiles\Destroyers\DestroyOnTime.cs" />
     <Compile Include="Assets\Scripts\Projectiles\FacesVelocity.cs" />
+    <Compile Include="Assets\Scripts\Projectiles\ManaCostOverTime.cs" />
     <Compile Include="Assets\Scripts\Projectiles\Moves.cs" />
     <Compile Include="Assets\Scripts\Projectiles\MovesForward.cs" />
     <Compile Include="Assets\Scripts\Projectiles\OnDeathEffect\DamageOnDeath.cs" />
