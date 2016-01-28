@@ -15,7 +15,6 @@ public class DamageOverTime : MonoBehaviour {
 
         //Get all targets
         List<GameObject> targets = targeter.GetTargets();
-        Debug.Log(targets.Count);
 
         foreach (GameObject target in targets) {
 

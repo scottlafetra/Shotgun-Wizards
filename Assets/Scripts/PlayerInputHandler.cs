@@ -123,7 +123,7 @@ public class PlayerInputHandler : MonoBehaviour {
             Input.GetAxisRaw("Joystick " + controllerNumber + " Axis " + moveYAxis)
             );
 
-        if (Mathf.Abs(axisPosition.magnitude) > axisDeadzone) {
+        if (axisPosition.magnitude > axisDeadzone) {
             return axisPosition;
         }
         else {
@@ -138,7 +138,7 @@ public class PlayerInputHandler : MonoBehaviour {
             Input.GetAxisRaw("Joystick " + controllerNumber + " Axis " + lookYAxis)
             );
 
-        if (Mathf.Abs(axisPosition.magnitude) > axisDeadzone) {
+        if (axisPosition.magnitude > axisDeadzone) {
             return axisPosition;
         }
         else {

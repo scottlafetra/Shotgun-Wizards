@@ -70,7 +70,8 @@ public class PlayerController : MonoBehaviour {
         Quaternion rotation = new Quaternion();
         Vector3 axisIn = playerIn.GetLookAxis();
         if(axisIn.magnitude > 0) {
-            rotation.SetLookRotation(axisIn);
+            //Debug.Log(axisIn.magnitude + ": (" + axisIn.x + ", " + axisIn.y + ", " + axisIn.z + ")" ); //Debug TODO: Remove
+            rotation.SetLookRotation(axisIn.normalized);
             transform.rotation = rotation;
         }
         
