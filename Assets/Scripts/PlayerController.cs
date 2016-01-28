@@ -13,7 +13,11 @@ public class PlayerController : MonoBehaviour {
 
     private StatsHandler myStats;
 
-	void Start () {
+    bool isPrimaryCasting = false;
+    bool isSecondaryCasting = false;
+
+
+    void Start () {
 
         characterController = GetComponent<CharacterController>();
         if (characterController == null) {
@@ -28,22 +32,30 @@ public class PlayerController : MonoBehaviour {
 
     void Update() {
 
-        //Test input
-        if (playerIn.GetAxisAsButtonDown("Primary Spell") < 0) {
+        //Spell Stuff
+        if (!isSecondaryCasting) {
+            isPrimaryCasting   = playerIn.GetAxisAsButton("Primary Spell") > 0;
+        }
+
+        if (!isPrimaryCasting) {
+            isSecondaryCasting = playerIn.GetButton("Secondary Spell");
+        }
+
+        if (playerIn.GetAxisAsButtonDown("Primary Spell") < 0 && !(isPrimaryCasting || isSecondaryCasting)) {
             shotgun.fire();
         }
 
-        if (playerIn.GetAxisAsButtonDown("Primary Spell") > 0) {
+        if (playerIn.GetAxisAsButtonDown("Primary Spell") > 0 && !isSecondaryCasting) {
             primarySpell.PressSpell(gameObject);
         }
-        if (playerIn.GetAxisAsButtonUp("Primary Spell") > 0) {
+        if (playerIn.GetAxisAsButtonUp("Primary Spell") > 0   && !isSecondaryCasting) {
             primarySpell.ReleaseSpell(gameObject);
         }
 
-        if (playerIn.GetButtonDown("Secondary Spell")) {
+        if (playerIn.GetButtonDown("Secondary Spell") && !isPrimaryCasting) {
             secondarySpell.PressSpell(gameObject);
         }
-        if(playerIn.GetButtonUp("Secondary Spell")) {
+        if(playerIn.GetButtonUp("Secondary Spell")    && !isPrimaryCasting) {
             secondarySpell.ReleaseSpell(gameObject);
         }
 
@@ -60,7 +72,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         if (playerIn.GetButtonDown("Fire")) {
-            myStats.AddElementalEffect(gameObject.AddComponent<ElementalEffect>());
+            myStats.AddElementalEffect(gameObject.AddComponent<ManaRegenEffect>());
         }
 
         //Movement

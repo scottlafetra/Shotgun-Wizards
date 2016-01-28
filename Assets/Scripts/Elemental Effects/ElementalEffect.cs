@@ -3,14 +3,14 @@ using System.Collections;
 
 public class ElementalEffect : MonoBehaviour {
 
-    private string effectName;
+    protected string effectName;
 
     private float startTime;
     protected float lifetime;
 
     protected StatsHandler stats;
 
-    private int stacks;
+    protected int stacks;
 
     public ElementalEffect() {
         Start();
@@ -21,16 +21,20 @@ public class ElementalEffect : MonoBehaviour {
         setName();
         startTime = Time.time;
         stacks = 1;
-        lifetime = 5.0f;
+        setLifetime();
         stats = GetComponent<StatsHandler>();
 	}
 
-    protected void setName() {//Override this to set the name
+    protected virtual void setName() {//Override this to set the name
         effectName = "Default Effect";
     }
 
-	// Update is called once per frame
-	void Update () {
+    protected virtual void setLifetime() {//Override this to set the lifetime
+        lifetime = 5.0f;
+    }
+
+    // Update is called once per frame
+    protected virtual void Update () {
         stats.ChangeHealth(-1 * stacks * Time.deltaTime);
 	}
 

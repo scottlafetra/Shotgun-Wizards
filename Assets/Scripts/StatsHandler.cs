@@ -56,8 +56,7 @@ public class StatsHandler : MonoBehaviour {
         health += dHealth;
 
         //Bounding Check
-        health = Mathf.Max(health, 0);
-        health = Mathf.Min(health, maxHealth);
+        health = Mathf.Clamp(health, 0, maxHealth);
     }
 
     public void ChangeMana(float dMana) {
@@ -65,8 +64,7 @@ public class StatsHandler : MonoBehaviour {
         mana += dMana;
 
         //Bounding Check
-        mana = Mathf.Max(mana, 0);
-        mana = Mathf.Min(mana, maxMana);
+        mana = Mathf.Clamp(mana, 0, maxMana);
     }
 
     public void AddElementalEffect(ElementalEffect effect) {
