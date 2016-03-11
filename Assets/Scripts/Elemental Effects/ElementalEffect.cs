@@ -33,6 +33,8 @@ public class ElementalEffect : MonoBehaviour {
         lifetime = 5.0f;
     }
 
+    protected virtual void OnEffectEnd(){ }
+
     // Update is called once per frame
     protected virtual void Update () {
         stats.ChangeHealth(-1 * stacks * Time.deltaTime);//generic effect
@@ -45,6 +47,7 @@ public class ElementalEffect : MonoBehaviour {
     public bool isDone() {
         if(Time.time > startTime + lifetime) {
             if (stacks < 1) {
+                OnEffectEnd();
                 return true;
 
             } else {
