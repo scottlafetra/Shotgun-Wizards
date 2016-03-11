@@ -17,7 +17,7 @@ public class ElementalEffect : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
+	protected virtual void Start () {
         setName();
         startTime = Time.time;
         stacks = 1;
@@ -35,7 +35,7 @@ public class ElementalEffect : MonoBehaviour {
 
     // Update is called once per frame
     protected virtual void Update () {
-        stats.ChangeHealth(-1 * stacks * Time.deltaTime);
+        stats.ChangeHealth(-1 * stacks * Time.deltaTime);//generic effect
 	}
 
     public string getName() {

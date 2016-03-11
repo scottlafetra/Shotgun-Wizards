@@ -20,6 +20,4 @@ public class TargetTouching : Targeter, Triggers {
     public override List<GameObject> GetTargets() {
         return currentlyTargeting;
     }
-
-
 }

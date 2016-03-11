@@ -22,6 +22,8 @@ public class StatsHandler : MonoBehaviour {
 	
 	void Update () {
         cleanupEffects();
+
+        moveSpeed = Mathf.Max(0, moveSpeed);
 	}
 
     private void cleanupEffects() {
