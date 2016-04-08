@@ -4,7 +4,6 @@ using System.Collections;
 public class EnemyController : MonoBehaviour {
     private GameObject targetPlayer;
     private StatsHandler playerStats;
-    private GameObject[] playerList;
     private NavMeshAgent nav;
 
     private StatsHandler myStats;
@@ -18,11 +17,10 @@ public class EnemyController : MonoBehaviour {
 
 
     void Start() {
-        playerList = GameObject.FindGameObjectsWithTag("Player");
 
-        //find the closest player
-        targetPlayer = playerList[0];
-        playerStats = playerList[0].GetComponent<StatsHandler>();
+        TargetClosestPlayer();
+        
+        playerStats = targetPlayer.GetComponent<StatsHandler>();
         nav = GetComponent<NavMeshAgent>();
 
         myStats = GetComponent<StatsHandler>();
@@ -30,6 +28,25 @@ public class EnemyController : MonoBehaviour {
         nextAttackAt = 0;
 
         nav.speed = myStats.moveSpeed;
+    }
+
+    void TargetClosestPlayer() {
+        GameObject[] playerList = GameObject.FindGameObjectsWithTag("Player");
+
+        double targetDistance = Vector3.Distance(transform.position, playerList[0].transform.position);
+        targetPlayer = playerList[0];
+
+        foreach (GameObject player in playerList) {
+            double thisDistance = Vector3.Distance(transform.position, player.transform.position);
+
+            if (thisDistance < targetDistance) {
+
+                targetPlayer = player;
+                targetDistance = thisDistance;
+            }
+        }
+
+        Debug.Log(targetPlayer);
     }
 
 	
@@ -41,18 +58,16 @@ public class EnemyController : MonoBehaviour {
         if (!myStats.IsAlive()) {
             Destroy(gameObject);
         }
-
-        if(playerStats.GetHealth() > 0) {
-            nav.SetDestination(targetPlayer.transform.position);
-        }
-        else {
-            nav.enabled = false;
-        }
-
         
 
+        if( targetPlayer == null ) {
+            TargetClosestPlayer();
+        }
+
+        nav.SetDestination(targetPlayer.transform.position);
+
         //attack if in range and cooldown has passed
-        if(!firstUpdate && nav.remainingDistance < attackRange && Time.time > nextAttackAt) {
+        if (!firstUpdate && nav.remainingDistance < attackRange && Time.time > nextAttackAt) {
             targetPlayer.GetComponent<StatsHandler>().ChangeHealth(-attackDamage);
 
             //set when enemy can next attack

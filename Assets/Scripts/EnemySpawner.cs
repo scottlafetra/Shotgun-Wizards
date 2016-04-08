@@ -26,18 +26,19 @@ public class EnemySpawner : MonoBehaviour {
             //return;
             //}
 
+
             //Allows spawning of only a set number of enemies (set by designer) in a random order from a list of enemies
-            if ((GameObject.FindGameObjectsWithTag("Enemy").Length < numOfEnemies) && (spawnEnemies == true)) {
+            if ((GameObject.FindGameObjectsWithTag(enemy[0].tag).Length < numOfEnemies) && (spawnEnemies == true)) {
                 Instantiate(enemy[randNumber], spawnPoint.position, spawnPoint.rotation);
             }
 
             //Stop spawns when max number is reached during wave
-            if ((GameObject.FindGameObjectsWithTag("Enemy").Length == numOfEnemies)) {
+            if ((GameObject.FindGameObjectsWithTag(enemy[0].tag).Length == numOfEnemies)) {
                 spawnEnemies = false;
             }
 
             //Next wave when enemy count hits 0
-            if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0) {
+            if (GameObject.FindGameObjectsWithTag(enemy[0].tag).Length == 0) {
                 //we can have an int waveNumber that increments and then we can increase numOfEnemies depending on that number
                 //using if else statements.
                 //numOfEnemies += 5; //(or whatever number you want to increment it by) Disabled for now - Scott
