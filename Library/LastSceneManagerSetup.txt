@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/main.unity
+- path: C:/Users/aliel/OneDrive/Documents/My Games/MyUnityGames/LevelDesign2Map(New)/LevelDesign2Map(New)/LevelDesign2Map/Assets/Scenes/LevelDesignMap.unity
   isLoaded: 1
   isActive: 1
